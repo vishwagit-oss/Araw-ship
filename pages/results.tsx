@@ -27,13 +27,14 @@ export default function ResultsPage() {
     <div className="max-w-7xl mx-auto p-4 overflow-x-auto">
       <ArawHeader />
       <div className="flex justify-center mb-6 gap-4">
-    <button
-         onClick={() => window.location.href = '/'}
-         className="bg-gray-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-gray-800"
-    >
-    
-    </button>
-    </div>
+  <button
+    onClick={() => window.location.href = '/'}
+    className="bg-gray-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-gray-800"
+  >
+    🏠 Home
+  </button>
+</div>
+
 
 
       <h1 className="text-3xl font-bold text-center mb-6">Result Summary</h1>

@@ -20,16 +20,14 @@ export default function Home() {
   return (
     <div className="max-w-xl mx-auto p-4">
       <ArawHeader />
-      <label className="block mb-2">Date:</label>
       <div className="flex justify-center mb-6">
-      <button
-         onClick={() => window.location.href = '/results'}
-         className="bg-blue-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-blue-800"
-      >
-    
-      </button>
-      </div>
-
+  <button
+    onClick={() => window.location.href = '/results'}
+    className="bg-blue-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-blue-800"
+  >
+    📊 Result
+  </button>
+</div>
 
 
       <input
