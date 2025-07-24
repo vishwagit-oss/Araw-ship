@@ -81,13 +81,13 @@ export default function ResultsPage() {
         {/* Home Button */}
         <button
           onClick={() => window.location.href = '/'}
-          className="bg-gray-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-gray-800"
+          className="bg-gray-700 text-white px-6 py-3 text-lg font-bold rounded shadow hover:bg-gray-800 w-full sm:w-auto"
         >
           🏠 Home
         </button>
 
         {/* Filter Inputs */}
-        <div className="flex flex-col sm:flex-row gap-4 flex-grow max-w-4xl">
+        <div className="flex flex-col sm:flex-row gap-4 flex-grow max-w-4xl w-full sm:w-auto">
           <select
             value={shipFilter}
             onChange={(e) => setShipFilter(e.target.value)}
@@ -126,16 +126,16 @@ export default function ResultsPage() {
         {!selectionMode ? (
           <button
             onClick={() => setSelectionMode(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="bg-blue-600 text-white px-4 py-2 rounded w-full sm:w-auto"
           >
             Select
           </button>
         ) : (
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={deleteSelected}
               disabled={selectedIds.size === 0}
-              className={`px-4 py-2 rounded text-white ${
+              className={`flex-1 px-4 py-2 rounded text-white text-center ${
                 selectedIds.size > 0 ? 'bg-red-600 hover:bg-red-700' : 'bg-red-300 cursor-not-allowed'
               }`}
             >
@@ -146,7 +146,7 @@ export default function ResultsPage() {
                 setSelectionMode(false)
                 setSelectedIds(new Set())
               }}
-              className="px-4 py-2 rounded border border-gray-400"
+              className="flex-1 px-4 py-2 rounded border border-gray-400 text-center"
             >
               Cancel
             </button>
@@ -167,62 +167,64 @@ export default function ResultsPage() {
       )}
 
       {/* Table */}
-      <table className="min-w-full text-sm border border-collapse border-gray-400">
-        <thead className="bg-gray-200 text-xs">
-          <tr>
-            {selectionMode && <th className="border p-2 w-12 text-center">Select</th>}
-            <th className="border p-2">Date</th>
-            <th className="border p-2">Ship</th>
-            <th className="border p-2">Buyer/Our Ship</th>
-            <th className="border p-2">IG Type</th>
-            <th className="border p-2">MT</th>
-            <th className="border p-2">Price (USD)</th>
-            <th className="border p-2">Value (AED)</th>
-            <th className="border p-2">Paid</th>
-            <th className="border p-2">Total Paid</th>
-            <th className="border p-2">Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          {results.length === 0 ? (
+      <div className="overflow-x-auto rounded border border-gray-400">
+        <table className="min-w-full text-sm border-collapse border-gray-400">
+          <thead className="bg-gray-200 text-xs">
             <tr>
-              <td colSpan={selectionMode ? 11 : 10} className="text-center py-4">
-                No data found.
-              </td>
+              {selectionMode && <th className="border p-2 w-12 text-center">Select</th>}
+              <th className="border p-2">Date</th>
+              <th className="border p-2">Ship</th>
+              <th className="border p-2">Buyer/Our Ship</th>
+              <th className="border p-2">IG Type</th>
+              <th className="border p-2">MT</th>
+              <th className="border p-2">Price (USD)</th>
+              <th className="border p-2">Value (AED)</th>
+              <th className="border p-2">Paid</th>
+              <th className="border p-2">Total Paid</th>
+              <th className="border p-2">Remarks</th>
             </tr>
-          ) : (
-            results.map((entry) => {
-              const isSelected = selectedIds.has(entry.id)
-              return (
-                <tr
-                  key={entry.id}
-                  className={isSelected ? 'bg-yellow-100' : ''}
-                >
-                  {selectionMode && (
-                    <td className="border p-2 text-center">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelect(entry.id)}
-                      />
-                    </td>
-                  )}
-                  <td className="border p-2">{entry.date}</td>
-                  <td className="border p-2">{entry.shipName}</td>
-                  <td className="border p-2">{entry.buyerOrOurShip || '-'}</td>
-                  <td className="border p-2">{entry.igType || '-'}</td>
-                  <td className="border p-2">{entry.mt || '-'}</td>
-                  <td className="border p-2">{entry.usdPrice || '-'}</td>
-                  <td className="border p-2">{entry.valueAED || '-'}</td>
-                  <td className="border p-2">{entry.paid || '-'}</td>
-                  <td className="border p-2">{entry.totalPaid || '-'}</td>
-                  <td className="border p-2">{entry.remarks || '-'}</td>
-                </tr>
-              )
-            })
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {results.length === 0 ? (
+              <tr>
+                <td colSpan={selectionMode ? 11 : 10} className="text-center py-4">
+                  No data found.
+                </td>
+              </tr>
+            ) : (
+              results.map((entry) => {
+                const isSelected = selectedIds.has(entry.id)
+                return (
+                  <tr
+                    key={entry.id}
+                    className={isSelected ? 'bg-yellow-100' : ''}
+                  >
+                    {selectionMode && (
+                      <td className="border p-2 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelect(entry.id)}
+                        />
+                      </td>
+                    )}
+                    <td className="border p-2">{entry.date}</td>
+                    <td className="border p-2">{entry.shipName}</td>
+                    <td className="border p-2">{entry.buyerOrOurShip || '-'}</td>
+                    <td className="border p-2">{entry.igType || '-'}</td>
+                    <td className="border p-2">{entry.mt || '-'}</td>
+                    <td className="border p-2">{entry.usdPrice || '-'}</td>
+                    <td className="border p-2">{entry.valueAED || '-'}</td>
+                    <td className="border p-2">{entry.paid || '-'}</td>
+                    <td className="border p-2">{entry.totalPaid || '-'}</td>
+                    <td className="border p-2">{entry.remarks || '-'}</td>
+                  </tr>
+                )
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

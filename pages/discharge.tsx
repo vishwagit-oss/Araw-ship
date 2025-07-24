@@ -17,7 +17,7 @@ export default function DischargePage() {
     shipTarget: 'MAHRU',
   })
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
   }
@@ -26,6 +26,7 @@ export default function DischargePage() {
     try {
       const res = await fetch('/api/discharge', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shipName: name, date, ...form }),
       })
       if (!res.ok) throw new Error('API failed')
@@ -51,45 +52,101 @@ export default function DischargePage() {
   const handleBack = () => router.push('/loading')
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-xl mx-auto p-4 sm:p-6">
       <ArawHeader />
       <h1 className="text-3xl font-bold mb-6 text-center">Discharge</h1>
 
-      <div className="text-center mb-4">
-        <span className="text-xl font-semibold mr-4"><strong>Ship:</strong> {name}</span>
-        <span className="text-xl font-semibold"><strong>Date:</strong> {date}</span>
+      <div className="text-center mb-6 space-y-1 sm:space-y-0 sm:flex sm:justify-center sm:gap-8">
+        <span className="text-lg font-semibold">
+          <strong>Ship:</strong> {name}
+        </span>
+        <span className="text-lg font-semibold">
+          <strong>Date:</strong> {date}
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+      >
         <div>
-          <label className="block font-semibold">IG Type</label>
-          <select name="igType" value={form.igType} onChange={handleChange} className="w-full border p-2 mb-2">
+          <label className="block font-semibold mb-1">IG Type</label>
+          <select
+            name="igType"
+            value={form.igType}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+          >
             <option>IG White</option>
             <option>IG Yellow</option>
           </select>
 
-          <label className="block font-semibold">MT</label>
-          <input name="mtValue" value={form.mtValue} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">MT</label>
+          <input
+            name="mtValue"
+            value={form.mtValue}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">IG</label>
-          <input name="igValue" value={form.igValue} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">IG</label>
+          <input
+            name="igValue"
+            value={form.igValue}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
         </div>
 
         <div>
-          <label className="block font-semibold">Rate USD</label>
-          <input name="rateUsd" value={form.rateUsd} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Rate USD</label>
+          <input
+            name="rateUsd"
+            value={form.rateUsd}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">Discharge To</label>
-          <input name="dischargeTo" value={form.dischargeTo} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Discharge To</label>
+          <input
+            name="dischargeTo"
+            value={form.dischargeTo}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">Internal Discharge</label>
-          <input name="internalDischarge" value={form.internalDischarge} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Internal Discharge</label>
+          <input
+            name="internalDischarge"
+            value={form.internalDischarge}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">IG To (value)</label>
-          <input name="igToValue" value={form.igToValue} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">IG To (value)</label>
+          <input
+            name="igToValue"
+            value={form.igToValue}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">Discharge to Ship</label>
-          <select name="shipTarget" value={form.shipTarget} onChange={handleChange} className="w-full border p-2 mb-2">
+          <label className="block font-semibold mb-1">Discharge to Ship</label>
+          <select
+            name="shipTarget"
+            value={form.shipTarget}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+          >
             <option>MAHRU</option>
             <option>PHOENIX31</option>
             <option>KOKO</option>
@@ -97,13 +154,30 @@ export default function DischargePage() {
             <option>SEA REGENT</option>
           </select>
         </div>
-      </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
-        <button onClick={handleBack} className="w-full sm:w-auto bg-gray-300 px-4 py-2 rounded">Back</button>
-        <button onClick={handleSubmit} className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
-        <button onClick={handleNext} className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded">Next</button>
-      </div>
+        <div className="sm:col-span-2 flex flex-col sm:flex-row gap-4 justify-between mt-4">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="w-full sm:w-auto bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Submit
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Next
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

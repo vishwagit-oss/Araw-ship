@@ -17,7 +17,7 @@ export default function ExpensePage() {
     fromOtherText: '',
   })
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
   }
@@ -26,6 +26,7 @@ export default function ExpensePage() {
     try {
       const res = await fetch('/api/expense', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shipName: name, date, ...form }),
       })
       if (!res.ok) throw new Error('API failed')
@@ -51,33 +52,72 @@ export default function ExpensePage() {
   const handleBack = () => router.push('/discharge')
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-xl mx-auto p-4 sm:p-6">
       <ArawHeader />
       <h1 className="text-3xl font-bold mb-6 text-center">Expenses</h1>
 
-      <div className="text-center mb-4">
-        <span className="text-xl font-semibold mr-4"><strong>Ship:</strong> {name}</span>
-        <span className="text-xl font-semibold"><strong>Date:</strong> {date}</span>
+      <div className="text-center mb-6 space-y-1 sm:space-y-0 sm:flex sm:justify-center sm:gap-8">
+        <span className="text-lg font-semibold">
+          <strong>Ship:</strong> {name}
+        </span>
+        <span className="text-lg font-semibold">
+          <strong>Date:</strong> {date}
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+      >
         <div>
-          <label className="block font-semibold">Remaining Cash</label>
-          <input name="remainingCash" value={form.remainingCash} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Remaining Cash</label>
+          <input
+            name="remainingCash"
+            value={form.remainingCash}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">Received Amount</label>
-          <input name="receivedAmount" value={form.receivedAmount} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Received Amount</label>
+          <input
+            name="receivedAmount"
+            value={form.receivedAmount}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">Received From</label>
-          <input name="receivedFrom" value={form.receivedFrom} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Received From</label>
+          <input
+            name="receivedFrom"
+            value={form.receivedFrom}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
         </div>
 
         <div>
-          <label className="block font-semibold">Given To</label>
-          <input name="givenTo" value={form.givenTo} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Given To</label>
+          <input
+            name="givenTo"
+            value={form.givenTo}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">To Ship</label>
-          <select name="toShip" value={form.toShip} onChange={handleChange} className="w-full border p-2 mb-2">
+          <label className="block font-semibold mb-1">To Ship</label>
+          <select
+            name="toShip"
+            value={form.toShip}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+          >
             <option>MAHRU</option>
             <option>PHOENIX31</option>
             <option>KOKO</option>
@@ -88,24 +128,59 @@ export default function ExpensePage() {
 
           {form.toShip === 'Others' && (
             <>
-              <label className="block font-semibold">Specify Other</label>
-              <input name="fromOtherText" value={form.fromOtherText} onChange={handleChange} className="w-full border p-2 mb-2" />
+              <label className="block font-semibold mb-1">Specify Other</label>
+              <input
+                name="fromOtherText"
+                value={form.fromOtherText}
+                onChange={handleChange}
+                className="w-full border rounded p-2 mb-4"
+                type="text"
+              />
             </>
           )}
 
-          <label className="block font-semibold">New Cash on Ship (AED)</label>
-          <input name="newCash" value={form.newCash} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">New Cash on Ship (AED)</label>
+          <input
+            name="newCash"
+            value={form.newCash}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
 
-          <label className="block font-semibold">Cargo on Ship (IG)</label>
-          <input name="cargoOnShip" value={form.cargoOnShip} onChange={handleChange} className="w-full border p-2 mb-2" />
+          <label className="block font-semibold mb-1">Cargo on Ship (IG)</label>
+          <input
+            name="cargoOnShip"
+            value={form.cargoOnShip}
+            onChange={handleChange}
+            className="w-full border rounded p-2 mb-4"
+            type="text"
+          />
         </div>
-      </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 justify-between mt-6">
-        <button onClick={handleBack} className="w-full sm:w-auto bg-gray-300 px-4 py-2 rounded">Back</button>
-        <button onClick={handleSubmit} className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
-        <button onClick={handleNext} className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded">Next</button>
-      </div>
+        <div className="sm:col-span-2 flex flex-col sm:flex-row gap-4 justify-between mt-4">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="w-full sm:w-auto bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Submit
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Next
+          </button>
+        </div>
+      </form>
     </div>
   )
 }

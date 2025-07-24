@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { jwtDecode } from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import ArawHeader from '../components/ArawHeader'
 
-// ✅ Define the expected shape of the decoded JWT
 type DecodedToken = {
   email: string
   iat?: number
@@ -27,9 +26,11 @@ export default function Home() {
     if (match) {
       const token = match[1]
       try {
-        const decoded = jwtDecode<DecodedToken>(token)
+        const decoded = jwtDecode(token) as DecodedToken
         if (decoded?.email === 'vishwagohil21@gmail.com') {
           setIsAdmin(true)
+        } else {
+          router.push('/login')
         }
       } catch (err) {
         console.error('❌ Invalid token:', err)
@@ -38,20 +39,22 @@ export default function Home() {
     } else {
       router.push('/login')
     }
-  }, [])
+  }, [router])
 
   const goToShipPage = (shipName: string) => {
     router.push(`/ship?name=${encodeURIComponent(shipName)}&date=${date}`)
   }
 
+  if (!isAdmin) return null
+
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto p-4 sm:p-6">
       <ArawHeader />
 
       <div className="flex justify-center mb-6">
         <button
           onClick={() => router.push('/results')}
-          className="bg-blue-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-blue-800"
+          className="bg-blue-700 text-white px-8 py-3 text-lg font-bold rounded shadow hover:bg-blue-800 transition"
         >
           📊 Result
         </button>
@@ -60,7 +63,7 @@ export default function Home() {
       <label className="block mb-2">Date:</label>
       <input
         type="date"
-        className="border p-2 w-full mb-4"
+        className="border p-2 w-full mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={date}
         onChange={e => setDate(e.target.value)}
       />
