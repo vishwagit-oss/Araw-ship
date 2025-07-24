@@ -20,12 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const token = jwt.sign({ email }, secret, { expiresIn: '1h' })
 
-  // ✅ Session cookie (deleted when browser is closed)
+  // Use secure: true only in production
   res.setHeader('Set-Cookie', serialize('token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production', // true on Vercel
     path: '/',
-    sameSite: 'lax'
+    sameSite: 'lax',
   }))
 
   res.status(200).json({ message: 'Login successful' })
