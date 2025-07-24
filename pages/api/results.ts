@@ -1,24 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import clientPromise from '../../lib/mongodb'
+import { ObjectId } from 'mongodb'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const client = await clientPromise
-    const db = client.db('shipApp') // ✅ match your real DB name
+    const db = client.db('shipApp')
 
     const { ship, start, end } = req.query
     const filter: any = {}
 
-    // ✅ Apply ship filter (exact match)
     if (ship) filter.shipName = ship
 
-    // ✅ Apply date string filters
     if (start || end) {
       filter.date = {}
       if (start) filter.date.$gte = start
       if (end) filter.date.$lte = end
     } else {
-      // Default: last 30 days
       const today = new Date()
       const past30 = new Date(today)
       past30.setDate(today.getDate() - 30)
@@ -26,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       filter.date = { $gte: pastDateStr }
     }
 
-    // Apply filter to all 3 collections
+    // Fetch from all collections
     const [loading, discharge, expense] = await Promise.all([
       db.collection('loading').find(filter).toArray(),
       db.collection('discharge').find(filter).toArray(),
@@ -34,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ])
 
     const formatEntry = (e: any, type: string) => ({
+      id: `${type}_${e._id.toString()}`, // <-- unique id combining collection + Mongo _id
       date: e.date,
       shipName: e.shipName,
       buyerOrOurShip: type === 'expense' ? e.toShip : e.shipTarget,

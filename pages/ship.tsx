@@ -1,3 +1,4 @@
+// pages/ship.tsx
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import ArawHeader from '../components/ArawHeader'
