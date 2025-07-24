@@ -1,3 +1,4 @@
+// pages/api/verify-otp.ts
 import { NextApiRequest, NextApiResponse } from 'next'
 import clientPromise from '../../lib/mongodb'
 import jwt from 'jsonwebtoken'
@@ -20,10 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const token = jwt.sign({ email }, secret, { expiresIn: '1h' })
 
-  // Use secure: true only in production
+  // ✅ Force cookie for Vercel (secure: true on production)
   res.setHeader('Set-Cookie', serialize('token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // true on Vercel
+    secure: true, // <--- FORCE THIS FOR VERCEL (it's always HTTPS)
     path: '/',
     sameSite: 'lax',
   }))
