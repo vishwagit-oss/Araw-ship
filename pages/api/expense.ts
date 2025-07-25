@@ -7,7 +7,8 @@ export default async function handler(req, res) {
   try {
     const client = await clientPromise;
     const db = client.db('shipApp');
-    const data = JSON.parse(req.body);
+
+    const data = req.body;  // <-- changed here
 
     await db.collection('expense').insertOne({ ...data, createdAt: new Date() });
     res.status(200).json({ message: 'Expense data saved successfully' });

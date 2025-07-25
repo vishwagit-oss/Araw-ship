@@ -1,51 +1,21 @@
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import jwtDecode from 'jwt-decode'
+import { useEffect, useState } from 'react'
 import ArawHeader from '../components/ArawHeader'
-
-type DecodedToken = {
-  email: string
-  iat?: number
-  exp?: number
-}
 
 const ships = ['MAHRU', 'PHOENIX31', 'KOKO', 'APRIL-2', 'SEA REGENT']
 
 export default function Home() {
   const router = useRouter()
   const [date, setDate] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0]
     setDate(today)
-
-    const cookie = document.cookie
-    const match = cookie.match(/token=([^;]+)/)
-
-    if (match) {
-      const token = match[1]
-      try {
-        const decoded = jwtDecode(token) as DecodedToken
-        if (decoded?.email === 'vishwagohil21@gmail.com') {
-          setIsAdmin(true)
-        } else {
-          router.push('/login')
-        }
-      } catch (err) {
-        console.error('❌ Invalid token:', err)
-        router.push('/login')
-      }
-    } else {
-      router.push('/login')
-    }
-  }, [router])
+  }, [])
 
   const goToShipPage = (shipName: string) => {
     router.push(`/ship?name=${encodeURIComponent(shipName)}&date=${date}`)
   }
-
-  if (!isAdmin) return null
 
   return (
     <div className="max-w-xl mx-auto p-4 sm:p-6">

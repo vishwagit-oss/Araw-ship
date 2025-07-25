@@ -8,23 +8,35 @@ export default function LoadingPage() {
 
   const [form, setForm] = useState({
     igType: 'IG White',
-    igValue: '',
-    aedPrice: '',
-    totalPaid: '',
-    customerMoney: '',
-    mtType: 'IG White',
-    mtValue: '',
+    igWhite: '',
+    igYellow: '',
+    discharge: '',
+    internalDischarge: '',
+    perIgPrice: '',
+    cashPaidToCustomer: '',
+    remarks: '',
+    customerMoneyCOB: '',
     usdRate: '',
-    totalValueAED: '',
+    rob: '',
   })
 
   useEffect(() => {
-    const usd = parseFloat(form.usdRate)
-    if (!isNaN(usd)) {
-      const aed = usd * 3.67
-      setForm(prev => ({ ...prev, totalValueAED: aed.toFixed(2) }))
-    }
-  }, [form.usdRate])
+    const igW = parseFloat(form.igWhite) || 0
+    const igY = parseFloat(form.igYellow) || 0
+    const dis = parseFloat(form.discharge) || 0
+    const internalDis = parseFloat(form.internalDischarge) || 0
+    const perPrice = parseFloat(form.perIgPrice) || 0
+
+    const receivedTotal = igW + igY
+    const rob = receivedTotal - dis - internalDis
+    const totalCash = rob * perPrice
+
+    setForm(prev => ({
+      ...prev,
+      rob: rob > 0 ? rob.toFixed(2) : '0',
+      customerMoneyCOB: totalCash > 0 ? totalCash.toFixed(0) : '0'
+    }))
+  }, [form.igWhite, form.igYellow, form.discharge, form.internalDischarge, form.perIgPrice])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -35,21 +47,25 @@ export default function LoadingPage() {
     try {
       const res = await fetch('/api/loading', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ shipName: name, date, ...form }),
       })
       if (!res.ok) throw new Error('API failed')
       const result = await res.json()
       alert(result.message || 'Saved!')
+
       setForm({
         igType: 'IG White',
-        igValue: '',
-        aedPrice: '',
-        totalPaid: '',
-        customerMoney: '',
-        mtType: 'IG White',
-        mtValue: '',
+        igWhite: '',
+        igYellow: '',
+        discharge: '',
+        internalDischarge: '',
+        perIgPrice: '',
+        cashPaidToCustomer: '',
+        remarks: '',
+        customerMoneyCOB: '',
         usdRate: '',
-        totalValueAED: '',
+        rob: '',
       })
     } catch (err) {
       console.error(err)
@@ -71,7 +87,7 @@ export default function LoadingPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left side */}
+        {/* Left */}
         <div>
           <label className="block font-semibold">IG Type</label>
           <select name="igType" value={form.igType} onChange={handleChange} className="w-full border p-2 mb-2 rounded">
@@ -79,74 +95,85 @@ export default function LoadingPage() {
             <option>IG Yellow</option>
           </select>
 
-          <label className="block font-semibold">IG</label>
+          <label className="block font-semibold">Received (IG White)</label>
           <input
-            name="igValue"
+            name="igWhite"
             type="number"
-            value={form.igValue}
+            value={form.igWhite}
             onChange={handleChange}
             className="w-full border p-2 mb-2 rounded"
           />
 
-          <label className="block font-semibold">AED Price</label>
+          <label className="block font-semibold">Received (IG Yellow)</label>
           <input
-            name="aedPrice"
+            name="igYellow"
             type="number"
-            value={form.aedPrice}
+            value={form.igYellow}
             onChange={handleChange}
             className="w-full border p-2 mb-2 rounded"
           />
 
-          <label className="block font-semibold">Total Paid</label>
+          <label className="block font-semibold">Discharge</label>
           <input
-            name="totalPaid"
+            name="discharge"
             type="number"
-            value={form.totalPaid}
+            value={form.discharge}
             onChange={handleChange}
             className="w-full border p-2 mb-2 rounded"
           />
 
-          <label className="block font-semibold">Customer Money Received</label>
+          <label className="block font-semibold">Internal Discharge</label>
           <input
-            name="customerMoney"
-            value={form.customerMoney}
+            name="internalDischarge"
+            type="number"
+            value={form.internalDischarge}
             onChange={handleChange}
             className="w-full border p-2 mb-2 rounded"
           />
         </div>
 
-        {/* Right side */}
+        {/* Right */}
         <div>
-          <label className="block font-semibold">MT Type</label>
-          <select name="mtType" value={form.mtType} onChange={handleChange} className="w-full border p-2 mb-2 rounded">
-            <option>IG White</option>
-            <option>IG Yellow</option>
-          </select>
-
-          <label className="block font-semibold">MT</label>
+          <label className="block font-semibold">PER IG PRICE</label>
           <input
-            name="mtValue"
+            name="perIgPrice"
             type="number"
-            value={form.mtValue}
+            value={form.perIgPrice}
             onChange={handleChange}
             className="w-full border p-2 mb-2 rounded"
           />
 
-          <label className="block font-semibold">USD</label>
+          <label className="block font-semibold">Cash Paid to Customer</label>
           <input
-            name="usdRate"
+            name="cashPaidToCustomer"
             type="number"
-            value={form.usdRate}
+            value={form.cashPaidToCustomer}
             onChange={handleChange}
             className="w-full border p-2 mb-2 rounded"
           />
 
-          <label className="block font-semibold">Total Value in AED</label>
+          <label className="block font-semibold">Remarks</label>
           <input
-            name="totalValueAED"
-            value={form.totalValueAED}
+            name="remarks"
+            value={form.remarks}
+            onChange={handleChange}
+            className="w-full border p-2 mb-2 rounded"
+          />
+
+          <label className="block font-semibold">Customer Money COB (Auto)</label>
+          <input
+            name="customerMoneyCOB"
+            value={form.customerMoneyCOB}
             readOnly
-            className="w-full border p-2 bg-gray-100 rounded"
+            className="w-full border p-2 mb-2 rounded bg-gray-100"
+          />
+
+          <label className="block font-semibold">R.O.B. (Auto)</label>
+          <input
+            name="rob"
+            value={form.rob}
+            readOnly
+            className="w-full border p-2 mb-2 rounded bg-gray-100"
           />
         </div>
       </div>
