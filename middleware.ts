@@ -9,6 +9,9 @@ const publicPaths = [
   '/login',
   '/api/login',
   '/api/verify-otp',
+  '/api/verify-reset-otp',
+  '/api/send-reset-otp', 
+  '/api/reset-password', 
   '/_next',
   '/favicon.ico',
 ]

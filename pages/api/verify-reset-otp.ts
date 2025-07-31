@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import clientPromise from '../../lib/mongodb'
-import jwt from 'jsonwebtoken'
-import { serialize } from 'cookie'
 
-const secret = process.env.JWT_SECRET || 'secret'
 const allowedAdmins = process.env.ALLOWED_ADMINS?.split(',').map(e => e.trim()) || []
 
 
@@ -22,15 +19,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ message: 'Invalid OTP' })
   }
 
-  const token = jwt.sign({ email }, secret, { expiresIn: '1h' })
-
-  res.setHeader('Set-Cookie', serialize('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax',
-    maxAge: 60 * 60, // 1 hour
-  }))
 
   res.status(200).json({ message: 'Login successful' })
 }
