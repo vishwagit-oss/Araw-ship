@@ -45,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     await transporter.sendMail(mailOptions)
-    setCookie('resetEmail', email, { req, res, maxAge: 300 }) // 5 min
+    setCookie('resetEmail', email, { req, res })
     res.status(200).json({ message: 'OTP sent' })
   } catch (error) {
     console.error('Error sending email:', error)
