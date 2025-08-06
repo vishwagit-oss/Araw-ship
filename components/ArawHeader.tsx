@@ -9,10 +9,10 @@ export default function ArawHeader() {
   }
 
   return (
-    <header className="bg-white border-b shadow-md mb-8">
+    <header className="bg-white border-b shadow-md mb-8 dark:bg-gray-900 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-4">
         {/* Company Title with Gradient */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-900 to-indigo-900 select-none">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-900 to-indigo-900 select-none dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500">
           SYS OIL AND PETROLEUMS CORP
         </h1>
 
